@@ -12,10 +12,10 @@ This script is designed to simplify the process of hardening your Linux system. 
 1. Clone the repository or download the script to your Linux system.
 2. Make the script executable:
    ```bash
-   chmod +x hardening.sh
+   chmod +x hardening-script.sh
 3. Execute
    ```bash
-   ./hardening.sh
+   ./hardening-script.sh
 
 # What the script does
 

@@ -136,10 +136,10 @@ while true; do
   case $answer in
     [Yy]*)
       # Disable CUPS services using systemctl
-      systemctl stop cups.service > /dev/null
-      systemctl disable cups.service > /dev/null
-      systemctl stop cups-browsed.service > /dev/null
-      systemctl disable cups-browsed.service > /dev/null
+      systemctl stop cups.service >/dev/null
+      systemctl disable cups.service >/dev/null
+      systemctl stop cups-browsed.service >/dev/null
+      systemctl disable cups-browsed.service >/dev/null
       echo "CUPS services have been disabled."
       break
       ;;
@@ -159,8 +159,8 @@ while true; do
   case $answer in
     [Yy]*)
       # Disable Bluetooth services using systemctl
-      systemctl stop bluetooth.service > /dev/null
-      systemctl disable bluetooth.service > /dev/null
+      systemctl stop bluetooth.service >/dev/null
+      systemctl disable bluetooth.service >/dev/null
       echo "Bluetooth services have been disabled."
       break
       ;;

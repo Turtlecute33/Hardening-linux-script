@@ -80,6 +80,8 @@ else
   echo "No changes were made to sysctl configuration files."
 fi
 
+#!/bin/bash
+
 # Function to configure UFW
 configure_ufw() {
   echo "Configuring the firewall..."
@@ -91,9 +93,9 @@ configure_ufw() {
   ufw allow https
 }
 
-# Prompt the user
+# Prompt the user for UFW configuration
 while true; do
-  read -p "Do you want to install and configure UFW (Uncomplicated Firewall)? say no if this pc needs income connections such as vpn, tor nodes, etc.. (yes/no): " answer
+  read -p "Do you want to install and configure UFW (Uncomplicated Firewall)? Say no if this PC needs incoming connections such as VPN, Tor nodes, etc. (yes/no): " answer
   case $answer in
     [Yy]*)
       # Install UFW if it's not already installed
@@ -114,7 +116,7 @@ while true; do
       ;;
     [Nn]*)
       echo "UFW installation and configuration skipped."
-      exit 0
+      break
       ;;
     *)
       echo "Please enter 'yes' or 'no'."
@@ -128,7 +130,7 @@ if ! command -v systemctl &> /dev/null; then
   exit 1
 fi
 
-# Prompt the user
+# Prompt the user to disable CUPS services
 while true; do
   read -p "Do you want to disable the printer services (CUPS) to improve security? (yes/no): " answer
   case $answer in
@@ -151,13 +153,7 @@ while true; do
   esac
 done
 
-# Check if systemctl is available
-if ! command -v systemctl &> /dev/null; then
-  echo "Systemctl is not available on this system. Exiting."
-  exit 1
-fi
-
-# Prompt the user
+# Prompt the user to disable Bluetooth services
 while true; do
   read -p "Do you want to disable Bluetooth services to improve security? (yes/no): " answer
   case $answer in
@@ -177,7 +173,4 @@ while true; do
       ;;
   esac
 done
-
-
-
 echo "System hardening completed. You should also remove all your unused packages, clean logs, and update your system. If you want, there is a script for doing this automatically on my GitHub."

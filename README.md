@@ -1,6 +1,6 @@
 # Linux hardening script 🔒
 
-![hardening Logo](https://turtlecute33.github.io/Turtlecute.org/images/hard.png)
+![hardening Logo](https://turtlecute33.github.io/Turtlecute.org/images/Linux-Hardening-Security-1600x900.webp)
 
 ## Description
 This script is designed to simplify the process of hardening your Linux system. Running this bash you'll not became magically invincible but this script will guide you to improve your system security.

@@ -114,7 +114,11 @@ detect_package_manager
 
 # Lines to add to sysctl configuration
 sysctl_lines="
-# Kernel security
+#################################################################### 
+## Security configs from Turtlecute33/Hardening-linux-script
+## Source: https://github.com/Turtlecute33/Hardening-linux-script
+
+## Kernel security
 kernel.kptr_restrict=2
 kernel.dmesg_restrict=1
 kernel.printk=3 3 3 3
@@ -125,7 +129,7 @@ vm.unprivileged_userfaultfd=0
 kernel.kexec_load_disabled=1
 kernel.sysrq=4
 
-# Network security
+## Network security
 net.ipv4.tcp_syncookies=1
 net.ipv4.tcp_rfc1337=1
 net.ipv4.conf.all.rp_filter=1
@@ -145,10 +149,12 @@ net.ipv4.tcp_sack=0
 net.ipv4.tcp_dsack=0
 net.ipv4.tcp_fack=0
 
-# Userspace security
+## Userspace security
 kernel.yama.ptrace_scope=2
 fs.protected_fifos=2
 fs.protected_regular=2
+
+## End of security configs from Turtlecute33/Hardening-linux-script
 "
 
 # Apply sysctl settings

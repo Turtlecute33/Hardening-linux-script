@@ -58,29 +58,29 @@ configure_ufw() {
   ufw --force enable
 }
 
-# Function to remove CUPS packages
+# Function to remove CUPS packages, excluding cups-pk-helper and libcups2
 remove_cups_packages() {
-  echo "Removing CUPS packages..."
+  echo "Removing CUPS packages, excluding cups-pk-helper and libcups2..."
   local cups_packages
   local package_count=0
 
   case "$PM_REMOVE" in
     *apt-get*)
-      cups_packages=$(dpkg -l | grep 'cups' | awk '{print $2}')
+      cups_packages=$(dpkg -l | grep 'cups' | awk '{print $2}' | grep -Ev 'cups-pk-helper|libcups2')
       if [ -n "$cups_packages" ]; then
         package_count=$(echo "$cups_packages" | wc -l)
         apt-get purge -y $cups_packages >/dev/null 2>&1
       fi
       ;;
     *dnf*)
-      cups_packages=$(dnf list installed | grep 'cups' | awk '{print $1}')
+      cups_packages=$(dnf list installed | grep 'cups' | awk '{print $1}' | grep -Ev 'cups-pk-helper|libcups2')
       if [ -n "$cups_packages" ]; then
         package_count=$(echo "$cups_packages" | wc -l)
         dnf remove -y $cups_packages >/dev/null 2>&1
       fi
       ;;
     *pacman*)
-      cups_packages=$(pacman -Qq | grep 'cups')
+      cups_packages=$(pacman -Qq | grep 'cups' | grep -Ev 'cups-pk-helper|libcups2')
       if [ -n "$cups_packages" ]; then
         package_count=$(echo "$cups_packages" | wc -l)
         pacman -Rns --noconfirm $cups_packages >/dev/null 2>&1
@@ -100,6 +100,7 @@ remove_cups_packages() {
     echo "No CUPS packages were found to remove."
   fi
 }
+
 
 # Function to disable Bluetooth services
 disable_bluetooth() {

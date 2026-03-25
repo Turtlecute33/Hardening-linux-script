@@ -314,6 +314,27 @@ EOF
   esac
 }
 
+install_fail2ban() {
+  echo "Installing and enabling fail2ban..."
+
+  case "$PM_FAMILY" in
+    apt)
+      apt-get install -y fail2ban >/dev/null 2>&1
+      ;;
+    dnf)
+      dnf install -y fail2ban >/dev/null 2>&1
+      ;;
+    pacman)
+      pacman -S --noconfirm fail2ban >/dev/null 2>&1
+      ;;
+  esac
+
+  systemctl enable fail2ban.service 2>/dev/null || true
+  systemctl start fail2ban.service 2>/dev/null || true
+
+  SUMMARY+=("Installed and enabled fail2ban.")
+}
+
 print_summary() {
   local item
 
@@ -370,6 +391,12 @@ main() {
     setup_auto_updates
   else
     SUMMARY+=("Skipped automatic security updates.")
+  fi
+
+  if prompt_yes_no "Do you want to install fail2ban for brute-force protection?" "yes"; then
+    install_fail2ban
+  else
+    SUMMARY+=("Skipped fail2ban installation.")
   fi
 
   print_summary

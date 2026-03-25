@@ -74,4 +74,8 @@ assert_contains "$script_source" 'dnf-automatic'
 assert_contains "$script_source" 'APT::Periodic::Unattended-Upgrade'
 assert_contains "$script_source" '/etc/dnf/automatic.conf'
 
+# Feature: fail2ban
+assert_contains "$script_source" 'install_fail2ban()'
+assert_contains "$script_source" 'fail2ban'
+
 echo "All tests passed."

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="50%" style="stop-color:#161b22"/>
+      <stop offset="100%" style="stop-color:#0d1117"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#58a6ff"/>
+      <stop offset="100%" style="stop-color:#1f6feb"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3fb950"/>
+      <stop offset="100%" style="stop-color:#238636"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <g opacity="0.04" stroke="#58a6ff" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="400"/><line x1="40" y1="0" x2="40" y2="400"/>
+    <line x1="80" y1="0" x2="80" y2="400"/><line x1="120" y1="0" x2="120" y2="400"/>
+    <line x1="160" y1="0" x2="160" y2="400"/><line x1="200" y1="0" x2="200" y2="400"/>
+    <line x1="240" y1="0" x2="240" y2="400"/><line x1="280" y1="0" x2="280" y2="400"/>
+    <line x1="320" y1="0" x2="320" y2="400"/><line x1="360" y1="0" x2="360" y2="400"/>
+    <line x1="400" y1="0" x2="400" y2="400"/><line x1="440" y1="0" x2="440" y2="400"/>
+    <line x1="480" y1="0" x2="480" y2="400"/><line x1="520" y1="0" x2="520" y2="400"/>
+    <line x1="560" y1="0" x2="560" y2="400"/><line x1="600" y1="0" x2="600" y2="400"/>
+    <line x1="640" y1="0" x2="640" y2="400"/><line x1="680" y1="0" x2="680" y2="400"/>
+    <line x1="720" y1="0" x2="720" y2="400"/><line x1="760" y1="0" x2="760" y2="400"/>
+    <line x1="800" y1="0" x2="800" y2="400"/><line x1="840" y1="0" x2="840" y2="400"/>
+    <line x1="880" y1="0" x2="880" y2="400"/><line x1="920" y1="0" x2="920" y2="400"/>
+    <line x1="960" y1="0" x2="960" y2="400"/><line x1="1000" y1="0" x2="1000" y2="400"/>
+    <line x1="1040" y1="0" x2="1040" y2="400"/><line x1="1080" y1="0" x2="1080" y2="400"/>
+    <line x1="1120" y1="0" x2="1120" y2="400"/><line x1="1160" y1="0" x2="1160" y2="400"/>
+    <line x1="0" y1="40" x2="1200" y2="40"/><line x1="0" y1="80" x2="1200" y2="80"/>
+    <line x1="0" y1="120" x2="1200" y2="120"/><line x1="0" y1="160" x2="1200" y2="160"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/><line x1="0" y1="240" x2="1200" y2="240"/>
+    <line x1="0" y1="280" x2="1200" y2="280"/><line x1="0" y1="320" x2="1200" y2="320"/>
+    <line x1="0" y1="360" x2="1200" y2="360"/>
+  </g>
+
+  <!-- Shield icon -->
+  <g transform="translate(160, 100)">
+    <!-- Shield shape -->
+    <path d="M60 0 L120 25 L120 75 C120 130 60 170 60 170 C60 170 0 130 0 75 L0 25 Z"
+          fill="url(#shield)" opacity="0.9"/>
+    <!-- Lock icon inside shield -->
+    <rect x="42" y="75" width="36" height="30" rx="4" fill="#0d1117" opacity="0.7"/>
+    <path d="M48 75 L48 62 C48 52 72 52 72 62 L72 75" fill="none" stroke="#0d1117" stroke-width="5" opacity="0.7"/>
+    <circle cx="60" cy="88" r="4" fill="#3fb950"/>
+    <!-- Checkmark on shield -->
+    <path d="M40 45 L55 60 L82 30" fill="none" stroke="#0d1117" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+  </g>
+
+  <!-- Title -->
+  <text x="340" y="170" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="#e6edf3" letter-spacing="-1">
+    Linux Hardening
+  </text>
+
+  <!-- Subtitle -->
+  <text x="340" y="215" font-family="'Segoe UI', system-ui, -apple-system, sans-serif" font-size="22" fill="#8b949e" font-weight="400">
+    Safe baseline hardening for production Linux servers
+  </text>
+
+  <!-- Tags -->
+  <g transform="translate(340, 240)">
+    <rect x="0" y="0" width="80" height="28" rx="14" fill="#1f6feb" opacity="0.2"/>
+    <text x="40" y="19" font-family="monospace" font-size="12" fill="#58a6ff" text-anchor="middle">sysctl</text>
+
+    <rect x="92" y="0" width="80" height="28" rx="14" fill="#1f6feb" opacity="0.2"/>
+    <text x="132" y="19" font-family="monospace" font-size="12" fill="#58a6ff" text-anchor="middle">fail2ban</text>
+
+    <rect x="184" y="0" width="96" height="28" rx="14" fill="#1f6feb" opacity="0.2"/>
+    <text x="232" y="19" font-family="monospace" font-size="12" fill="#58a6ff" text-anchor="middle">modprobe</text>
+
+    <rect x="292" y="0" width="114" height="28" rx="14" fill="#1f6feb" opacity="0.2"/>
+    <text x="349" y="19" font-family="monospace" font-size="12" fill="#58a6ff" text-anchor="middle">auto-updates</text>
+
+    <rect x="418" y="0" width="104" height="28" rx="14" fill="#1f6feb" opacity="0.2"/>
+    <text x="470" y="19" font-family="monospace" font-size="12" fill="#58a6ff" text-anchor="middle">core-dumps</text>
+  </g>
+
+  <!-- Bottom accent line -->
+  <rect x="0" y="388" width="1200" height="12" fill="url(#accent)" opacity="0.6"/>
+
+  <!-- Terminal snippet decoration -->
+  <g transform="translate(340, 300)" opacity="0.5">
+    <text font-family="monospace" font-size="15" fill="#8b949e">$</text>
+    <text x="18" font-family="monospace" font-size="15" fill="#3fb950"> sudo ./hardening-script.sh</text>
+  </g>
+</svg>

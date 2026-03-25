@@ -1,54 +1,88 @@
-# Linux hardening script
+<p align="center">
+  <img src="assets/banner.svg" alt="Linux Hardening Script" width="100%"/>
+</p>
 
-![hardening Logo](https://turtlecute33.github.io/Turtlecute.org/images/Linux-Hardening-Security-1600x900.webp)
+<p align="center">
+  <strong>Safe baseline hardening for production Linux servers</strong>
+</p>
 
-## Description
+<p align="center">
+  <img alt="Shell" src="https://img.shields.io/badge/shell-bash-green?logo=gnubash&logoColor=white"/>
+  <img alt="License" src="https://img.shields.io/github/license/Turtlecute33/Hardening-linux-script"/>
+  <img alt="Platform" src="https://img.shields.io/badge/platform-linux-blue?logo=linux&logoColor=white"/>
+</p>
 
-This project provides a safe baseline hardening script for Linux servers. It is meant to improve common kernel, network, and userspace defaults without pretending to replace a real security review or a host-specific operations policy.
+---
 
-The script does not configure a firewall and does not touch SSH. Those choices are intentionally left to the server owner because they are too dependent on the workload and access model.
+## Overview
 
-## Prerequisites
+A single interactive script that applies widely accepted kernel, network, and userspace hardening defaults to a Linux server. Every destructive or opinionated action is behind a **y/n prompt** — nothing changes without your explicit consent.
 
-- Run the script as `root`.
-- Use a Linux system with `systemd`.
-- Supported distro families: Debian/Ubuntu, Red Hat family, and Arch.
+The script intentionally **does not** configure firewalls or SSH. Those choices depend on your workload and access model and are best handled separately.
 
-## Usage
-
-1. Clone the repository or download the script.
-2. Make the script executable:
+## Quick Start
 
 ```bash
+git clone https://github.com/Turtlecute33/Hardening-linux-script.git
+cd Hardening-linux-script
 chmod +x hardening-script.sh
-```
-
-3. Run it as root:
-
-```bash
 sudo ./hardening-script.sh
 ```
 
-## What the script does
+## Features
 
-The script applies a safe baseline by:
+| Feature | Details | Prompted? |
+|---|---|:---:|
+| **Sysctl hardening** | Kernel pointer restriction, dmesg restriction, ptrace scope, symlink/hardlink protection, SYN cookies, ICMP hardening, source route blocking, martian logging | No (always applied) |
+| **CUPS removal** | Purges printing packages and disables `cups` / `cups-browsed` services | Yes |
+| **Bluetooth disable** | Stops and disables `bluetooth.service` | Yes |
+| **Kernel module blacklist** | Blocks unused filesystem modules: cramfs, freevxfs, jffs2, hfs, hfsplus, udf | Yes (default: yes) |
+| **USB storage disable** | Prevents loading `usb-storage` module | Yes (default: no) |
+| **Core dump restriction** | Configures `limits.conf`, sysctl, and `systemd-coredump` to drop all core dumps | Yes (default: yes) |
+| **Automatic security updates** | Configures `unattended-upgrades` (Debian/Ubuntu) or `dnf-automatic` (RHEL/Fedora) | Yes (default: yes) |
+| **fail2ban** | Installs and enables fail2ban for brute-force protection | Yes (default: yes) |
 
-1. Writing a managed sysctl drop-in under `/etc/sysctl.d/99-hardening-baseline.conf`.
-2. Applying broadly safe kernel, network, and userspace hardening settings.
-3. Prompting before optional changes such as removing `CUPS`.
-4. Prompting before optional changes such as disabling Bluetooth.
-5. Prompting before blacklisting unused kernel modules (cramfs, freevxfs, jffs2, hfs, hfsplus, udf).
-6. Prompting before disabling USB storage.
-7. Prompting before restricting core dumps.
-8. Prompting before enabling automatic security updates (Debian/Ubuntu, RHEL/Fedora only).
-9. Prompting before installing fail2ban for brute-force protection.
+## Supported Distributions
 
-## What the script does not do
+- **Debian / Ubuntu** (apt)
+- **RHEL / Fedora / CentOS** (dnf)
+- **Arch Linux** (pacman)
 
-- It does not configure a firewall.
-- It does not touch SSH or `sshd`.
-- It does not apply aggressive network hardening that can break VPNs, containers, routing, or IPv6 autoconfiguration.
+## Requirements
 
-## Notes
+- Root privileges (`sudo`)
+- `systemd`-based system
+- `bash`
 
-This is a general baseline meant to be usable on home servers, P2P servers, Bitcoin nodes, and production systems. You should still review the resulting configuration against your actual workload and threat model.
+## What It Does NOT Do
+
+- Configure a firewall (`iptables`, `nftables`, `ufw`)
+- Modify SSH or `sshd_config`
+- Apply aggressive network settings that could break VPNs, containers, or IPv6 autoconfiguration
+- Make changes without asking first (except safe sysctl defaults)
+
+## How It Works
+
+All configuration is written to **drop-in files** — existing system configs are never overwritten:
+
+```
+/etc/sysctl.d/99-hardening-baseline.conf    # Kernel & network tunables
+/etc/modprobe.d/hardening-blacklist.conf     # Module blacklist
+/etc/security/limits.d/99-hardening-no-coredump.conf  # Core dump limits
+/etc/sysctl.d/99-hardening-coredump.conf     # Core dump sysctl
+/etc/systemd/coredump.conf.d/hardening.conf  # systemd-coredump override
+```
+
+To revert any change, simply delete the corresponding drop-in file and reload (`sysctl --system`, etc.).
+
+## Testing
+
+A test suite is included in `tests/`:
+
+```bash
+bash tests/test_hardening_script.sh
+```
+
+## License
+
+See [LICENSE](LICENSE) for details.

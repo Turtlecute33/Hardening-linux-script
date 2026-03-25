@@ -1,30 +1,49 @@
-# Linux hardening script 🔒
+# Linux hardening script
 
 ![hardening Logo](https://turtlecute33.github.io/Turtlecute.org/images/Linux-Hardening-Security-1600x900.webp)
 
 ## Description
-This script is designed to simplify the process of hardening your Linux system. Running this bash you'll not became magically invincible but this script will guide you to improve your system security.
+
+This project provides a safe baseline hardening script for Linux servers. It is meant to improve common kernel, network, and userspace defaults without pretending to replace a real security review or a host-specific operations policy.
+
+The script does not configure a firewall and does not touch SSH. Those choices are intentionally left to the server owner because they are too dependent on the workload and access model.
 
 ## Prerequisites
-- You should run this script as a superuser (root) to ensure proper permissions.
-  
+
+- Run the script as `root`.
+- Use a Linux system with `systemd`.
+- Supported distro families: Debian/Ubuntu, Red Hat family, and Arch.
+
 ## Usage
-1. Clone the repository or download the script to your Linux system.
+
+1. Clone the repository or download the script.
 2. Make the script executable:
-   ```bash
-   chmod +x hardening-script.sh
-3. Execute
-   ```bash
-   ./hardening-script.sh
 
-# What the script does
+```bash
+chmod +x hardening-script.sh
+```
 
-The script will perform the following steps:
+3. Run it as root:
 
-1. Check if the script is run as root to ensure proper permissions.
-2. Check if your distro is using systemd.
-3. improve kernel, network and user space security tweaking some values inside your systemd config.
-4. Setup a basic firewall with UFW (optional).
-5. Disable CUPS & Bluetooth services (optional).
+```bash
+sudo ./hardening-script.sh
+```
 
-Happy hardening! 🦾
+## What the script does
+
+The script applies a safe baseline by:
+
+1. Writing a managed sysctl drop-in under `/etc/sysctl.d/99-hardening-baseline.conf`.
+2. Applying broadly safe kernel, network, and userspace hardening settings.
+3. Prompting before optional changes such as removing `CUPS`.
+4. Prompting before optional changes such as disabling Bluetooth.
+
+## What the script does not do
+
+- It does not configure a firewall.
+- It does not touch SSH or `sshd`.
+- It does not apply aggressive network hardening that can break VPNs, containers, routing, or IPv6 autoconfiguration.
+
+## Notes
+
+This is a general baseline meant to be usable on home servers, P2P servers, Bitcoin nodes, and production systems. You should still review the resulting configuration against your actual workload and threat model.

@@ -78,4 +78,11 @@ assert_contains "$script_source" '/etc/dnf/automatic.conf'
 assert_contains "$script_source" 'install_fail2ban()'
 assert_contains "$script_source" 'fail2ban'
 
+# README documents new features
+assert_contains "$readme_source" 'kernel module'
+assert_contains "$readme_source" 'USB storage'
+assert_contains "$readme_source" 'core dump'
+assert_contains "$readme_source" 'automatic security updates'
+assert_contains "$readme_source" 'fail2ban'
+
 echo "All tests passed."

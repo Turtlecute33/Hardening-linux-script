@@ -37,6 +37,11 @@ The script applies a safe baseline by:
 2. Applying broadly safe kernel, network, and userspace hardening settings.
 3. Prompting before optional changes such as removing `CUPS`.
 4. Prompting before optional changes such as disabling Bluetooth.
+5. Prompting before blacklisting unused kernel modules (cramfs, freevxfs, jffs2, hfs, hfsplus, udf).
+6. Prompting before disabling USB storage.
+7. Prompting before restricting core dumps.
+8. Prompting before enabling automatic security updates (Debian/Ubuntu, RHEL/Fedora only).
+9. Prompting before installing fail2ban for brute-force protection.
 
 ## What the script does not do
 

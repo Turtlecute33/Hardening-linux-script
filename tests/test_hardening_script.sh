@@ -61,4 +61,10 @@ assert_contains "$script_source" 'install hfsplus /bin/true'
 assert_contains "$script_source" 'install udf /bin/true'
 assert_contains "$script_source" 'install usb-storage /bin/true'
 
+# Feature: core dump restrictions
+assert_contains "$script_source" 'restrict_core_dumps()'
+assert_contains "$script_source" '/etc/security/limits.d/99-hardening-no-coredump.conf'
+assert_contains "$script_source" 'kernel.core_pattern=/dev/null'
+assert_contains "$script_source" '* hard core 0'
+
 echo "All tests passed."

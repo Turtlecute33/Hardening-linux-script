@@ -4,6 +4,9 @@ set -euo pipefail
 
 SYSCTL_DROPIN="/etc/sysctl.d/99-hardening-baseline.conf"
 MODPROBE_BLACKLIST="/etc/modprobe.d/hardening-blacklist.conf"
+COREDUMP_LIMITS="/etc/security/limits.d/99-hardening-no-coredump.conf"
+COREDUMP_SYSCTL="/etc/sysctl.d/99-hardening-coredump.conf"
+COREDUMP_SYSTEMD="/etc/systemd/coredump.conf.d/hardening.conf"
 SCRIPT_NAME="Turtlecute33/Hardening-linux-script"
 
 SUMMARY=()
@@ -183,7 +186,6 @@ write_module_blacklist() {
   local blacklist_modules="$1"
   local blacklist_usb="$2"
   local temp_file
-  local content=""
 
   if [[ "$blacklist_modules" == "no" && "$blacklist_usb" == "no" ]]; then
     return
@@ -231,6 +233,53 @@ disable_usb_storage() {
   write_module_blacklist "${1:-no}" "yes"
 }
 
+restrict_core_dumps() {
+  local temp_file
+
+  echo "Restricting core dumps..."
+
+  # limits.conf
+  temp_file="$(mktemp)"
+  cat > "$temp_file" <<'EOF'
+## Managed by Turtlecute33/Hardening-linux-script
+* hard core 0
+EOF
+  mkdir -p "$(dirname "$COREDUMP_LIMITS")"
+  install -m 0644 "$temp_file" "$COREDUMP_LIMITS"
+  rm -f "$temp_file"
+
+  # sysctl
+  temp_file="$(mktemp)"
+  cat > "$temp_file" <<'EOF'
+## Managed by Turtlecute33/Hardening-linux-script
+## Core dump restrictions
+kernel.core_pattern=/dev/null
+EOF
+  mkdir -p "$(dirname "$COREDUMP_SYSCTL")"
+  install -m 0644 "$temp_file" "$COREDUMP_SYSCTL"
+  rm -f "$temp_file"
+
+  if command -v sysctl >/dev/null 2>&1; then
+    sysctl -p "$COREDUMP_SYSCTL" >/dev/null 2>&1 || true
+  fi
+
+  # systemd-coredump override (binary lives at /usr/lib/systemd/, not in PATH)
+  if [[ -x /usr/lib/systemd/systemd-coredump ]]; then
+    temp_file="$(mktemp)"
+    cat > "$temp_file" <<'EOF'
+[Coredump]
+Storage=none
+ProcessSizeMax=0
+EOF
+    mkdir -p "$(dirname "$COREDUMP_SYSTEMD")"
+    install -m 0644 "$temp_file" "$COREDUMP_SYSTEMD"
+    rm -f "$temp_file"
+    SUMMARY+=("Restricted core dumps (limits.conf, sysctl, systemd-coredump).")
+  else
+    SUMMARY+=("Restricted core dumps (limits.conf, sysctl).")
+  fi
+}
+
 print_summary() {
   local item
 
@@ -276,6 +325,12 @@ main() {
   fi
 
   write_module_blacklist "$do_blacklist_modules" "$do_blacklist_usb"
+
+  if prompt_yes_no "Do you want to restrict core dumps?" "yes"; then
+    restrict_core_dumps
+  else
+    SUMMARY+=("Skipped core dump restrictions.")
+  fi
 
   print_summary
 }

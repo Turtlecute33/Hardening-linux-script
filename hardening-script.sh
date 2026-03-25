@@ -3,6 +3,7 @@
 set -euo pipefail
 
 SYSCTL_DROPIN="/etc/sysctl.d/99-hardening-baseline.conf"
+MODPROBE_BLACKLIST="/etc/modprobe.d/hardening-blacklist.conf"
 SCRIPT_NAME="Turtlecute33/Hardening-linux-script"
 
 SUMMARY=()
@@ -178,6 +179,58 @@ disable_bluetooth() {
   SUMMARY+=("Disabled Bluetooth services if present.")
 }
 
+write_module_blacklist() {
+  local blacklist_modules="$1"
+  local blacklist_usb="$2"
+  local temp_file
+  local content=""
+
+  if [[ "$blacklist_modules" == "no" && "$blacklist_usb" == "no" ]]; then
+    return
+  fi
+
+  temp_file="$(mktemp)"
+
+  {
+    echo "## Managed by ${SCRIPT_NAME}"
+    echo "## File: ${MODPROBE_BLACKLIST}"
+    if [[ "$blacklist_modules" == "yes" ]]; then
+      echo ""
+      echo "## Disable unused filesystem modules"
+      echo "install cramfs /bin/true"
+      echo "install freevxfs /bin/true"
+      echo "install jffs2 /bin/true"
+      echo "install hfs /bin/true"
+      echo "install hfsplus /bin/true"
+      echo "install udf /bin/true"
+    fi
+    if [[ "$blacklist_usb" == "yes" ]]; then
+      echo ""
+      echo "## Disable USB storage"
+      echo "install usb-storage /bin/true"
+    fi
+  } > "$temp_file"
+
+  mkdir -p "$(dirname "$MODPROBE_BLACKLIST")"
+  install -m 0644 "$temp_file" "$MODPROBE_BLACKLIST"
+  rm -f "$temp_file"
+
+  if [[ "$blacklist_modules" == "yes" ]]; then
+    SUMMARY+=("Blacklisted unused kernel modules (cramfs, freevxfs, jffs2, hfs, hfsplus, udf).")
+  fi
+  if [[ "$blacklist_usb" == "yes" ]]; then
+    SUMMARY+=("Blacklisted USB storage module.")
+  fi
+}
+
+blacklist_kernel_modules() {
+  write_module_blacklist "yes" "${1:-no}"
+}
+
+disable_usb_storage() {
+  write_module_blacklist "${1:-no}" "yes"
+}
+
 print_summary() {
   local item
 
@@ -206,6 +259,23 @@ main() {
   else
     SUMMARY+=("Skipped Bluetooth changes.")
   fi
+
+  local do_blacklist_modules="no"
+  local do_blacklist_usb="no"
+
+  if prompt_yes_no "Do you want to blacklist unused kernel modules (cramfs, freevxfs, jffs2, hfs, hfsplus, udf)?" "yes"; then
+    do_blacklist_modules="yes"
+  else
+    SUMMARY+=("Skipped kernel module blacklisting.")
+  fi
+
+  if prompt_yes_no "Do you want to disable USB storage?" "no"; then
+    do_blacklist_usb="yes"
+  else
+    SUMMARY+=("Skipped USB storage disable.")
+  fi
+
+  write_module_blacklist "$do_blacklist_modules" "$do_blacklist_usb"
 
   print_summary
 }

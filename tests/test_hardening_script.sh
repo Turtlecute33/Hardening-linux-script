@@ -48,4 +48,17 @@ assert_contains "$readme_source" 'CUPS'
 assert_contains "$readme_source" 'Bluetooth'
 assert_not_contains "$readme_source" 'UFW'
 
+# Feature: kernel module blacklisting
+assert_contains "$script_source" 'blacklist_kernel_modules()'
+assert_contains "$script_source" 'disable_usb_storage()'
+assert_contains "$script_source" 'write_module_blacklist()'
+assert_contains "$script_source" '/etc/modprobe.d/hardening-blacklist.conf'
+assert_contains "$script_source" 'install cramfs /bin/true'
+assert_contains "$script_source" 'install freevxfs /bin/true'
+assert_contains "$script_source" 'install jffs2 /bin/true'
+assert_contains "$script_source" 'install hfs /bin/true'
+assert_contains "$script_source" 'install hfsplus /bin/true'
+assert_contains "$script_source" 'install udf /bin/true'
+assert_contains "$script_source" 'install usb-storage /bin/true'
+
 echo "All tests passed."

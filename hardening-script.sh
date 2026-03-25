@@ -280,6 +280,40 @@ EOF
   fi
 }
 
+setup_auto_updates() {
+  local temp_file
+
+  echo "Setting up automatic security updates..."
+
+  case "$PM_FAMILY" in
+    apt)
+      apt-get install -y unattended-upgrades >/dev/null 2>&1
+      temp_file="$(mktemp)"
+      cat > "$temp_file" <<'EOF'
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+EOF
+      install -m 0644 "$temp_file" /etc/apt/apt.conf.d/20auto-upgrades
+      rm -f "$temp_file"
+      SUMMARY+=("Installed and configured unattended-upgrades.")
+      ;;
+    dnf)
+      dnf install -y dnf-automatic >/dev/null 2>&1
+      if [[ -f /etc/dnf/automatic.conf ]]; then
+        sed -i 's/^apply_updates.*=.*/apply_updates = yes/' /etc/dnf/automatic.conf
+      fi
+      systemctl enable dnf-automatic.timer 2>/dev/null || true
+      systemctl start dnf-automatic.timer 2>/dev/null || true
+      SUMMARY+=("Installed and enabled dnf-automatic with apply_updates = yes.")
+      ;;
+    pacman)
+      echo "Note: Automatic updates are not recommended on Arch Linux (rolling release)."
+      echo "Please manage updates manually with: pacman -Syu"
+      SUMMARY+=("Skipped automatic updates (Arch Linux — not recommended).")
+      ;;
+  esac
+}
+
 print_summary() {
   local item
 
@@ -330,6 +364,12 @@ main() {
     restrict_core_dumps
   else
     SUMMARY+=("Skipped core dump restrictions.")
+  fi
+
+  if prompt_yes_no "Do you want to enable automatic security updates?" "yes"; then
+    setup_auto_updates
+  else
+    SUMMARY+=("Skipped automatic security updates.")
   fi
 
   print_summary

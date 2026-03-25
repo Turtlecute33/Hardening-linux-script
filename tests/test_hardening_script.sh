@@ -67,4 +67,11 @@ assert_contains "$script_source" '/etc/security/limits.d/99-hardening-no-coredum
 assert_contains "$script_source" 'kernel.core_pattern=/dev/null'
 assert_contains "$script_source" '* hard core 0'
 
+# Feature: automatic security updates
+assert_contains "$script_source" 'setup_auto_updates()'
+assert_contains "$script_source" 'unattended-upgrades'
+assert_contains "$script_source" 'dnf-automatic'
+assert_contains "$script_source" 'APT::Periodic::Unattended-Upgrade'
+assert_contains "$script_source" '/etc/dnf/automatic.conf'
+
 echo "All tests passed."
